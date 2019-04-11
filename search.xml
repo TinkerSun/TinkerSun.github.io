@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[popen函数无法获取错误输出]]></title>
+    <url>%2F2019%2F04%2F11%2Fpopen%E5%87%BD%E6%95%B0%E6%97%A0%E6%B3%95%E8%8E%B7%E5%8F%96%E9%94%99%E8%AF%AF%E8%BE%93%E5%87%BA%2F</url>
+    <content type="text"><![CDATA[有时候在编程时，我们需要调用外部命令，并获取该命令的输出。linux提供了`popen`函数来帮我们解决这个难题。 123#include &lt;stdio.h&gt;FILE *popen(const char *command, const char *type);int pclose(FILE *stream); 当设置type为&apos;r&apos;时，便可以获取到该命令的标准输出了，但是却不能获取到标准错误输出。要解决的话其实很简单，那就是在执行命令时重定向就好了`2&gt;&amp;1`。 1234567891011121314151617181920int main(int argc, char **argv)&#123; FILE *fp = NULL; char buff[256] = &#123;0&#125;; fp = popen(&quot;ping -I epon0.2 -c 5 www.baidu.com 2&gt;&amp;1&quot;, &quot;r&quot;); if (NULL == fp) &#123; printf(&quot;popen error\n&quot;); return 0; &#125; while (NULL != fgets(buff, sizeof(buff), fp)) &#123; printf(&quot;buff: %s\n&quot;,buff); &#125; pclose(fp); return 0;&#125;]]></content>
+  </entry>
+  <entry>
     <title><![CDATA[tcpdump之我用]]></title>
     <url>%2F2019%2F03%2F27%2Ftcpdump%E4%B9%8B%E6%88%91%E7%94%A8%2F</url>
     <content type="text"><![CDATA[常用tcpdump命令 命令 解释 tcpdump -i any 抓取所有网卡的数据 tcpdump -i eth0 host 192.168.42.1 and port 1111 抓取在eth0上特定IP地址和端口号的数据包 tcpdump -c 5 -nn -i eth0 icmp and src 192.168.100.62 抓取5个主机为192.168.100.62对本机的ping的数据包 tcpdump -c 2 -q -XX -vvv -nn -i eth0 tcp dst port 22 解析ssh数据包 tcpdump -i eth0 udp port 1111 抓取UDP协议并指定端口号 tcpdump -i eth0 udp -w /tmp/br0.pcap &amp; 抓取UDP协议数据并输出为Wireshark格式的文件（结束抓包killall tcpdump） tcpdump –help1234567891011# tcpdump -htcpdump version 4.9.2libpcap version 1.8.1Usage: tcpdump [-aAbdDefhHIJKlLnNOpqStuUvxX#] [ -B size ] [ -c count ] [ -C file_size ] [ -E algo:secret ] [ -F file ] [ -G seconds ] [ -i interface ] [ -j tstamptype ] [ -M secret ] [ --number ] [ -Q in|out|inout ] [ -r file ] [ -s snaplen ] [ --time-stamp-precision precision ] [ --immediate-mode ] [ -T type ] [ --version ] [ -V file ] [ -w file ] [ -W filecount ] [ -y datalinktype ] [ -z postrotate-command ] [ -Z user ] [ expression ]]]></content>

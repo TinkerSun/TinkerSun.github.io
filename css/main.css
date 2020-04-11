@@ -158,7 +158,6 @@ body {
   line-height: 2;
   color: #555;
   background: #f5f7f9;
-  word-break: break-all;
 }
 @media (max-width: 767px) {
   body {
@@ -312,7 +311,6 @@ hr {
 blockquote {
   margin: 0;
   padding: 0 15px;
-  word-break: break-all;
   color: #666;
   border-left: 4px solid #ddd;
 }
@@ -1845,7 +1843,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ffd0ff;
+  background: #ff837c;
 }
 .links-of-blogroll {
   font-size: 13px;

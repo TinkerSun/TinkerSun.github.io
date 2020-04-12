@@ -1,40 +1,483 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[popen函数无法获取错误输出]]></title>
-    <url>%2F2019%2F04%2F11%2Fpopen%E5%87%BD%E6%95%B0%E6%97%A0%E6%B3%95%E8%8E%B7%E5%8F%96%E9%94%99%E8%AF%AF%E8%BE%93%E5%87%BA%2F</url>
-    <content type="text"><![CDATA[有时候在编程时，我们需要调用外部命令，并获取该命令的输出。linux提供了popen()函数来帮我们解决这个难题。 123#include &lt;stdio.h&gt;FILE *popen(const char *command, const char *type);int pclose(FILE *stream); 当设置type为&apos;r&apos;时，便可以获取到该命令的标准输出了，但是却不能获取到标准错误输出。 要解决的话其实很简单，那就是在执行命令时重定向就好了2&gt;&amp;1。 1234567891011121314151617181920int main(int argc, char **argv)&#123; FILE *fp = NULL; char buff[256] = &#123;0&#125;; fp = popen(&quot;ping -I epon0.2 -c 5 www.baidu.com 2&gt;&amp;1&quot;, &quot;r&quot;); if (NULL == fp) &#123; printf(&quot;popen error\n&quot;); return 0; &#125; while (NULL != fgets(buff, sizeof(buff), fp)) &#123; printf(&quot;buff: %s\n&quot;,buff); &#125; pclose(fp); return 0;&#125;]]></content>
-  </entry>
-  <entry>
-    <title><![CDATA[tcpdump之我用]]></title>
-    <url>%2F2019%2F03%2F27%2Ftcpdump%E4%B9%8B%E6%88%91%E7%94%A8%2F</url>
-    <content type="text"><![CDATA[常用tcpdump命令 命令 解释 tcpdump -i any 抓取所有网卡的数据 tcpdump -i eth0 host 192.168.42.1 and port 1111 抓取在eth0上特定IP地址和端口号的数据包 tcpdump -c 5 -nn -i eth0 icmp and src 192.168.100.62 抓取5个主机为192.168.100.62对本机的ping的数据包 tcpdump -c 2 -q -XX -vvv -nn -i eth0 tcp dst port 22 解析ssh数据包 tcpdump -i eth0 udp port 1111 抓取UDP协议并指定端口号 tcpdump -i eth0 udp -w /tmp/br0.pcap &amp; 抓取UDP协议数据并输出为Wireshark格式的文件（结束抓包killall tcpdump） tcpdump –help1234567891011# tcpdump -htcpdump version 4.9.2libpcap version 1.8.1Usage: tcpdump [-aAbdDefhHIJKlLnNOpqStuUvxX#] [ -B size ] [ -c count ] [ -C file_size ] [ -E algo:secret ] [ -F file ] [ -G seconds ] [ -i interface ] [ -j tstamptype ] [ -M secret ] [ --number ] [ -Q in|out|inout ] [ -r file ] [ -s snaplen ] [ --time-stamp-precision precision ] [ --immediate-mode ] [ -T type ] [ --version ] [ -V file ] [ -w file ] [ -W filecount ] [ -y datalinktype ] [ -z postrotate-command ] [ -Z user ] [ expression ]]]></content>
+    <title>git、svn之我用</title>
+    <url>/2019/03/27/git%E3%80%81svn%E4%B9%8B%E6%88%91%E7%94%A8/</url>
+    <content><![CDATA[<p>git和svn的命令这么多，脑袋不够记怎么办，不如使用<code>git help</code>和<code>svn help</code>来帮你吧</p>
+<p><code>git tag</code>不会用，试试看<code>git help tag</code>，<code>git bisect</code>不会用，试试看<code>git help bisect</code>。<br>同样的，<code>svn patch</code>不会用，试试看<code>svn help patch</code>，<code>svn revert</code>不会用，试试看<code>svn help revert</code>。</p>
+<p>具体的命令不会用时，别急着先去Google或者百度，不妨先看看它的help，以下是我整理的常用的命令：</p>
+<a id="more"></a>
+<h3 id="Git常用命令列表"><a href="#Git常用命令列表" class="headerlink" title="Git常用命令列表"></a>Git常用命令列表</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>git config [–global] -l</td>
+<td>查看配置信息</td>
+</tr>
+<tr>
+<td>git config –global user.name xxx</td>
+<td>配置用户名</td>
+</tr>
+<tr>
+<td>git config –global user.email xxx</td>
+<td>配置邮箱地址</td>
+</tr>
+<tr>
+<td>git config –global commit.template ~/git.commit.template</td>
+<td>配置提交模板</td>
+</tr>
+<tr>
+<td>git config –global core.editor vi</td>
+<td>设置使用的文本编辑器</td>
+</tr>
+<tr>
+<td>git config –global color.ui auto</td>
+<td>设置输出为彩色</td>
+</tr>
+<tr>
+<td>git init</td>
+<td>把当前的目录变成可以管理的git仓库</td>
+</tr>
+<tr>
+<td>git clone xxx</td>
+<td>clone某个仓库到本地</td>
+</tr>
+<tr>
+<td>git add xxx</td>
+<td>把xxx文件添加到暂存区</td>
+</tr>
+<tr>
+<td>git rm xxx</td>
+<td>删除xxx文件</td>
+</tr>
+<tr>
+<td>git clean -dfx</td>
+<td>清除本地修改文件</td>
+</tr>
+<tr>
+<td>git commit  files  –m “xxx”</td>
+<td>提交文件 –m 后面的是注释</td>
+</tr>
+<tr>
+<td>git commit -a files</td>
+<td>使用提交模板提交文件</td>
+</tr>
+<tr>
+<td>git commit –-amend</td>
+<td>修改提交的信息或文件</td>
+</tr>
+<tr>
+<td>git status [-uno]</td>
+<td>查看仓库状态</td>
+</tr>
+<tr>
+<td>git diff xxx [–cached]</td>
+<td>查看xxx文件修改了那些内容</td>
+</tr>
+<tr>
+<td>git log [–grep=]</td>
+<td>查看历史记录 （-p 显示具体修改）</td>
+</tr>
+<tr>
+<td>git reflog</td>
+<td>查看所有历史 包括回退历史</td>
+</tr>
+<tr>
+<td>git merge dev</td>
+<td>在当前的分支上合并dev分支</td>
+</tr>
+<tr>
+<td>git branch</td>
+<td>查看当前所有的分支 （-r 查看远程分支）</td>
+</tr>
+<tr>
+<td>git branch –d dev</td>
+<td>删除dev分支</td>
+</tr>
+<tr>
+<td>git branch name</td>
+<td>创建分支</td>
+</tr>
+<tr>
+<td>git branch -a –contains <commit></commit></td>
+<td>根据 commit 查找 git 分支名</td>
+</tr>
+<tr>
+<td>git stash [show&#124; pop&#124; apply&#124; clear]</td>
+<td>把当前的工作隐藏起来 等以后恢复现场后继续工作 （git help stash）</td>
+</tr>
+<tr>
+<td>git remote</td>
+<td>查看远程库的信息(-v 详细信息)</td>
+</tr>
+<tr>
+<td>git checkout -b <branch></branch></td>
+<td>创建并切换到新分支</td>
+</tr>
+<tr>
+<td>git checkout – xxx</td>
+<td>丢弃xxx文件工作区的改动</td>
+</tr>
+<tr>
+<td>git checkout master</td>
+<td>切换到master分支  （git checkout -b 创建并切换）</td>
+</tr>
+<tr>
+<td>git reset –hard <commit></commit></td>
+<td>回到删除的版本位置</td>
+</tr>
+<tr>
+<td>git reset HEAD xxx</td>
+<td>撤出暂存区</td>
+</tr>
+<tr>
+<td>git revert <commit> [-n]</commit></td>
+<td>重置一个提交</td>
+</tr>
+<tr>
+<td>git cherry-pick <commit></commit></td>
+<td>合并某次提交（-n 只合并）</td>
+</tr>
+<tr>
+<td>git apply xxx.patch</td>
+<td>打入patch</td>
+</tr>
+<tr>
+<td>git push origin HEAD:refs/for/refs/heads/branchName</td>
+<td>把master分支推送到远程库对应的分支上</td>
+</tr>
+<tr>
+<td>git push <remote> –delete <branch></branch></remote></td>
+<td>删除远程端分支</td>
+</tr>
+<tr>
+<td>git pull [-r]</td>
+<td>将服务器上的代码同步到本地</td>
+</tr>
+<tr>
+<td>git fetch</td>
+<td>下载远程端版本，但不合并到HEAD中</td>
+</tr>
+<tr>
+<td>git rebase HEAD~3 -i</td>
+<td>修改已commit的信息</td>
+</tr>
+<tr>
+<td>git blame xxx [-L50，100]</td>
+<td>文件xxx每行的修改记录</td>
+</tr>
+<tr>
+<td>git grep $regexp $(git rev-list –all)</td>
+<td>查找修改记录</td>
+</tr>
+<tr>
+<td>git tag –a &lt;标签名&gt; -m “标签说明”</td>
+<td>tag的用法 git help tag</td>
+</tr>
+<tr>
+<td>git push origin refs/tags/&lt;标签名&gt;</td>
+<td>推送tag到中央仓库</td>
+</tr>
+<tr>
+<td>git checkout refs/tags/&lt;标签名&gt;</td>
+<td>切换到tag</td>
+</tr>
+<tr>
+<td>git tag -d &lt;标签名&gt;<br>git push origin :refs/tags/&lt;标签名&gt;</td>
+<td>删除tag</td>
+</tr>
+</tbody>
+</table>
+<h3 id="svn常用命令列表"><a href="#svn常用命令列表" class="headerlink" title="svn常用命令列表"></a>svn常用命令列表</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>svnadmin create</td>
+<td>svn仓库的创建/删除</td>
+</tr>
+<tr>
+<td>htpasswd [-cmdpsD] passwordfile username</td>
+<td>svn 用户添加/修改/删除</td>
+</tr>
+<tr>
+<td>svn co url</td>
+<td>从服务器上下载代码</td>
+</tr>
+<tr>
+<td>svn co –depth=empty url  work_dir <br>cd work_dir; svn up xxxx</td>
+<td>从服务器checkout出单个文件</td>
+</tr>
+<tr>
+<td>svn add [delete &#124;rename]</td>
+<td>文件增删 改名</td>
+</tr>
+<tr>
+<td>svn ci files -m “log”</td>
+<td>将files上传到服务器，”xxx”为修改日志</td>
+</tr>
+<tr>
+<td>svn up -r <versionnum></versionnum></td>
+<td>更新到指定版本号</td>
+</tr>
+<tr>
+<td>svn st [-q]</td>
+<td>查看当前文件状态</td>
+</tr>
+<tr>
+<td>svn revert * -R</td>
+<td>恢复本目录下的文件</td>
+</tr>
+<tr>
+<td>svn diff xxx</td>
+<td>查看文件的修改内容</td>
+</tr>
+<tr>
+<td>svn cleanup</td>
+<td>清除锁定的文件</td>
+</tr>
+<tr>
+<td>svn log [-v .] -r <versionnum> &#124;less</versionnum></td>
+<td>查看某个版本号修改了哪些文件及日志</td>
+</tr>
+<tr>
+<td>svn info</td>
+<td>查看svn的版本号、服务器地址等信息</td>
+</tr>
+<tr>
+<td>svn st &#124; grep ‘^?’ &#124; awk ‘{print $2}’ &#124; xargs rm -rf</td>
+<td>删除某些文件</td>
+</tr>
+<tr>
+<td>svn diff -r5452:5476 &gt; a.patch<br>svn patch a.patch</td>
+<td>svn 合并某一版本提交的代码</td>
+</tr>
+<tr>
+<td>svn merge xxx@versionNum yyy .</td>
+<td>合并某一分支versionNum以后的修改</td>
+</tr>
+<tr>
+<td>svn merge dev@100 dev@101 .</td>
+<td>合并dev分支的101修改到本目录</td>
+</tr>
+<tr>
+<td>svn sw –relocate oldIP/dir newIP/dir</td>
+<td>linux下修改svn的URL</td>
+</tr>
+</tbody>
+</table>
+]]></content>
       <categories>
         <category>工具使用</category>
       </categories>
   </entry>
   <entry>
-    <title><![CDATA[wireshark之我用]]></title>
-    <url>%2F2019%2F03%2F27%2Fwireshark%E4%B9%8B%E6%88%91%E7%94%A8%2F</url>
-    <content type="text"><![CDATA[过滤器1、捕获过滤器（CaptureFilters）捕获过滤器设置于抓包前，决定想要抓取什么样的报文，捕获过滤器只能过滤协议，不能过滤内容。打开wireshark软件，依次点击捕获-&gt;捕获过滤器，可看到wireshark默认的过滤器规则有： 名称 过滤器 “Ethernet address 00:00:5e:00:53:00” ether host 00:00:5e:00:53:00 “Ethernet type 0x0806 (ARP)” ether proto 0x0806 “No Broadcast and no Multicast” not broadcast and not multicast “No ARP” not arp “IPv4 only” ip “IPv4 address 192.0.2.1” host 192.0.2.1 “IPv6 only” ip6 “IPv6 address 2001:db8::1” host 2001:db8::1 “IPX only” ipx “TCP only” tcp “UDP only” udp “TCP or UDP port 80 (HTTP)” port 80 “HTTP TCP port (80)” tcp port http “No ARP and no DNS” not arp and port not 53 “Non-HTTP and non-SMTP to/from www.wireshark.org&quot; not port 80 and not port 25 and host www.wireshark.org 我们可以借助示例来写出我们自己想要的过滤规则，比如 (host 192.168.1.1 or src net 10.58.0.0/16) and tcp dst portrange 80-8080 and dst net 172.0.0.0/8 2、显示过滤器（DisplayFilters）显示过滤器用于过滤所抓取的报文，方便处理和排查，它不但支持协议过滤而且还支持内容过滤。 2.1 协议过滤根据具体协议ppp || pppoe || pppoed || pppoes 过滤ppp相关报文根据协议的属性值tcp.flags.syn == 1tcp.port == 49264tcp.srcport == 49264ip.addr != 192.168.1.1ip.src == 192.168.1.1http.request.method == &quot;GET&quot;dns.qry.name == &quot;zyx.qq.com&quot;不知道属性值怎么过滤时，可以在wireshark中找到该属性值，右击选中作为过滤器应用-&gt;选中 2.2 内容过滤tcp contains &quot;USER&quot;udp[8:3] == 02:37:61 udp报文的payload前3个字节在遇到大小写敏感的时候，还可以使用函数：upper(string－field)－把字符串转换成大写lower(string－field)－把字符串转换成小写如 lower(http.request.uri) contains “img” 其他查找可以通过按Ctrl+F键，可选显示过滤器、十六进制值、字符串、正则表达式 另外在统计菜单栏里，IO图表，流量图等也均是分析协议的利器]]></content>
-      <categories>
-        <category>工具使用</category>
-      </categories>
-  </entry>
-  <entry>
-    <title><![CDATA[git、svn之我用]]></title>
-    <url>%2F2019%2F03%2F27%2Fgit%E3%80%81svn%E4%B9%8B%E6%88%91%E7%94%A8%2F</url>
-    <content type="text"><![CDATA[git和svn的命令这么多，脑袋不够记怎么办，不如使用git help和svn help来帮你吧 git tag不会用，试试看git help tag，git bisect不会用，试试看git help bisect。同样的，svn patch不会用，试试看svn help patch，svn revert不会用，试试看svn help revert。 具体的命令不会用时，别急着先去Google或者百度，不妨先看看它的help，以下是我整理的常用的命令： Git常用命令列表 命令 解释 git config [–global] -l 查看配置信息 git config –global user.name xxx 配置用户名 git config –global user.email xxx 配置邮箱地址 git config –global commit.template ~/git.commit.template 配置提交模板 git config –global core.editor vi 设置使用的文本编辑器 git config –global color.ui auto 设置输出为彩色 git init 把当前的目录变成可以管理的git仓库 git clone xxx clone某个仓库到本地 git add xxx 把xxx文件添加到暂存区 git rm xxx 删除xxx文件 git clean -dfx 清除本地修改文件 git commit files –m “xxx” 提交文件 –m 后面的是注释 git commit -a files 使用提交模板提交文件 git commit –-amend 修改提交的信息或文件 git status [-uno] 查看仓库状态 git diff xxx [–cached] 查看xxx文件修改了那些内容 git log [–grep=] 查看历史记录 （-p 显示具体修改） git reflog 查看所有历史 包括回退历史 git merge dev 在当前的分支上合并dev分支 git branch 查看当前所有的分支 （-r 查看远程分支） git branch –d dev 删除dev分支 git branch name 创建分支 git branch -a –contains 根据 commit 查找 git 分支名 git stash [show&#124; pop&#124; apply&#124; clear] 把当前的工作隐藏起来 等以后恢复现场后继续工作 （git help stash） git remote 查看远程库的信息(-v 详细信息) git checkout -b 创建并切换到新分支 git checkout – xxx 丢弃xxx文件工作区的改动 git checkout master 切换到master分支 （git checkout -b 创建并切换） git reset –hard 回到删除的版本位置 git reset HEAD xxx 撤出暂存区 git revert [-n] 重置一个提交 git cherry-pick 合并某次提交（-n 只合并） git apply xxx.patch 打入patch git push origin HEAD:refs/for/refs/heads/branchName 把master分支推送到远程库对应的分支上 git push –delete 删除远程端分支 git pull [-r] 将服务器上的代码同步到本地 git fetch 下载远程端版本，但不合并到HEAD中 git rebase HEAD~3 -i 修改已commit的信息 git blame xxx [-L50，100] 文件xxx每行的修改记录 git grep $regexp $(git rev-list –all) 查找修改记录 git tag –a &lt;标签名&gt; -m “标签说明” tag的用法 git help tag git push origin refs/tags/&lt;标签名&gt; 推送tag到中央仓库 git checkout refs/tags/&lt;标签名&gt; 切换到tag git tag -d &lt;标签名&gt;git push origin :refs/tags/&lt;标签名&gt; 删除tag svn常用命令列表 命令 解释 svnadmin create svn仓库的创建/删除 htpasswd [-cmdpsD] passwordfile username svn 用户添加/修改/删除 svn co url 从服务器上下载代码 svn co –depth=empty url work_dir cd work_dir; svn up xxxx 从服务器checkout出单个文件 svn add [delete &#124;rename] 文件增删 改名 svn ci files -m “log” 将files上传到服务器，”xxx”为修改日志 svn up -r 更新到指定版本号 svn st [-q] 查看当前文件状态 svn revert * -R 恢复本目录下的文件 svn diff xxx 查看文件的修改内容 svn cleanup 清除锁定的文件 svn log [-v .] -r &#124;less 查看某个版本号修改了哪些文件及日志 svn info 查看svn的版本号、服务器地址等信息 svn st &#124; grep ‘^?’ &#124; awk ‘{print $2}’ &#124; xargs rm -rf 删除某些文件 svn diff -r5452:5476 &gt; a.patchsvn patch a.patch svn 合并某一版本提交的代码 svn merge xxx@versionNum yyy . 合并某一分支versionNum以后的修改 svn merge dev@100 dev@101 . 合并dev分支的101修改到本目录 svn sw –relocate oldIP/dir newIP/dir linux下修改svn的URL]]></content>
-      <categories>
-        <category>工具使用</category>
-      </categories>
-  </entry>
-  <entry>
-    <title><![CDATA[hexo折腾记]]></title>
-    <url>%2F2019%2F03%2F27%2Fhexo%E6%8A%98%E8%85%BE%E8%AE%B0%2F</url>
-    <content type="text"><![CDATA[1、安装git下载地址：https://git-scm.com/downloads123$ git config --global user.name &quot;xxx&quot;$ git config --global user.email xxx@yyy.com$ ssh-keygen -t rsa 2、安装node.js下载地址：https://nodejs.org/en/可用下列命令查看安装的版本号 node -vnpm -v 3、安装并配置hexo npm install -g hexo-cli 常用hexo命令1234567hexo init blog # 初始化博客hexo n HelloWorld # 新建文章hexo n page &quot;pageName&quot; # 新建页面hexo g # 生成hexo s # 启动服务预览 在本地预览效果，默认情况下，访问网址为： http://localhost:4000/hexo d # 部署hexo clean # 清理缓存 hexo的help如下：123456789101112131415161718192021222324252627Usage: hexo &lt;command&gt;Commands: clean Remove generated files and cache. config Get or set configurations. deploy Deploy your website. generate Generate static files. help Get help on a command. init Create a new Hexo folder. list List the information of the site migrate Migrate your site from other system to Hexo. new Create a new post. publish Moves a draft post from _drafts to _posts folder. render Render files with renderer plugins. server Start the server. version Display version information.Global Options: --config Specify config file instead of using _config.yml --cwd Specify the CWD --debug Display all verbose messages in the terminal --draft Display draft posts --safe Disable all plugins and scripts --silent Hide output on consoleFor more help, you can use &apos;hexo help [command]&apos; for the detailed informationor you can check the docs: http://hexo.io/docs/ 配置Deployment，在其文件夹中，找到_config.yml文件，修改repo值123456# Deployment## Docs: https://hexo.io/docs/deployment.htmldeploy: type: git repo: git@github.com:TinkerSun/TinkerSun.github.io.git branch: master 4、配置next主题 git clone https://github.com/theme-next/hexo-theme-next themes/next hexo 首页文章只显示一部分 12# Automatically scroll page to section which is under &lt;!-- more --&gt; mark.scroll_to_more: true hexo 添加站内搜索 1、 安装相关插件 npm install hexo-generator-searchdb --save 若有fsevents相关警告可不必理会，此时已经安装好了 2、 修改根目录下的_config.yml，添加以下内容 12345search: path: search.xml field: post format: html limit: 10000 3、 修改next主题目录下的_config.yml，将local_search的false改为true 12local_search: enable: true hexo 写文章时用到图片如何处理 1、 安装相关插件 npm install hexo-asset-image --save 2、 修改根目录下的_config.yml，将post_asset_folder:这个选项设置为true hexo 修改文章底部的#号标签 修改模板/themes/next/layout/_macro/post.swig，搜索 rel=&quot;tag&quot;&gt;#，将其中的 # 换成&lt;i class=&quot;fa fa-tag&quot;&gt;&lt;/i&gt; hexo 添加置顶 1、 安装相关插件 12npm uninstall hexo-generator-index --savenpm install hexo-generator-index-pin-top --save 2、 在需要置顶文章的front-matter中加上top: true 3、 修改模板/themes/next/layout/_macro/post.swig，在&lt;div class=&quot;post-meta&quot;&gt;标签下，添加如下代码： 12345&#123;% if post.top %&#125;&lt;i class=&quot;fa fa-thumb-tack&quot;&gt;&lt;/i&gt;&lt;font color=7D26CD&gt;置顶&lt;/font&gt;&lt;span class=&quot;post-meta-divider&quot;&gt;|&lt;/span&gt;&#123;% endif %&#125; 5、其他事项 powershell无法运行hexo，报错如下 1hexo : 无法加载文件 C:\Users\Administrator\AppData\Roaming\npm\hexo.ps1，因为在此系统上禁止运行脚本。 解决方法： 1、 以管理员身份打开powershell 2、 set-ExecutionPolicy RemoteSigned 更改权限为A 3 3、 通过 get-ExecutionPolicy 查看当前的状态]]></content>
+    <title>hexo折腾记</title>
+    <url>/2019/03/27/hexo%E6%8A%98%E8%85%BE%E8%AE%B0/</url>
+    <content><![CDATA[<h3 id="1、安装git"><a href="#1、安装git" class="headerlink" title="1、安装git"></a>1、安装git</h3><p>下载地址：<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">https://git-scm.com/downloads</a><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ git config --global user.name &quot;xxx&quot;</span><br><span class="line">$ git config --global user.email xxx@yyy.com</span><br><span class="line">$ ssh-keygen -t rsa</span><br></pre></td></tr></table></figure></p>
+<h3 id="2、安装node-js"><a href="#2、安装node-js" class="headerlink" title="2、安装node.js"></a>2、安装node.js</h3><p>下载地址：<a href="https://nodejs.org/en/" target="_blank" rel="noopener">https://nodejs.org/en/</a><br>可用下列命令查看安装的版本号</p>
+<blockquote>
+<p>node -v<br>npm -v</p>
+</blockquote>
+<h3 id="3、安装并配置hexo"><a href="#3、安装并配置hexo" class="headerlink" title="3、安装并配置hexo"></a>3、安装并配置hexo</h3><blockquote>
+<p>npm install -g hexo-cli</p>
+</blockquote>
+<a id="more"></a>
+<p>常用hexo命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo init blog         # 初始化博客</span><br><span class="line">hexo n HelloWorld      # 新建文章</span><br><span class="line">hexo n page &quot;pageName&quot; # 新建页面</span><br><span class="line">hexo g                 # 生成</span><br><span class="line">hexo s                 # 启动服务预览 在本地预览效果，默认情况下，访问网址为： http://localhost:4000/</span><br><span class="line">hexo d                 # 部署</span><br><span class="line">hexo clean             # 清理缓存</span><br></pre></td></tr></table></figure></p>
+<p>hexo的help如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Usage: hexo &lt;command&gt;</span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  clean     Remove generated files and cache.</span><br><span class="line">  config    Get or set configurations.</span><br><span class="line">  deploy    Deploy your website.</span><br><span class="line">  generate  Generate static files.</span><br><span class="line">  help      Get help on a command.</span><br><span class="line">  init      Create a new Hexo folder.</span><br><span class="line">  list      List the information of the site</span><br><span class="line">  migrate   Migrate your site from other system to Hexo.</span><br><span class="line">  new       Create a new post.</span><br><span class="line">  publish   Moves a draft post from _drafts to _posts folder.</span><br><span class="line">  render    Render files with renderer plugins.</span><br><span class="line">  server    Start the server.</span><br><span class="line">  version   Display version information.</span><br><span class="line"></span><br><span class="line">Global Options:</span><br><span class="line">  --config  Specify config file instead of using _config.yml</span><br><span class="line">  --cwd     Specify the CWD</span><br><span class="line">  --debug   Display all verbose messages in the terminal</span><br><span class="line">  --draft   Display draft posts</span><br><span class="line">  --safe    Disable all plugins and scripts</span><br><span class="line">  --silent  Hide output on console</span><br><span class="line"></span><br><span class="line">For more help, you can use &apos;hexo help [command]&apos; for the detailed information</span><br><span class="line">or you can check the docs: http://hexo.io/docs/</span><br></pre></td></tr></table></figure></p>
+<p>配置Deployment，在其文件夹中，找到_config.yml文件，修改repo值<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:TinkerSun/TinkerSun.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure></p>
+<h3 id="4、配置next主题"><a href="#4、配置next主题" class="headerlink" title="4、配置next主题"></a>4、配置next主题</h3><blockquote>
+<p>git clone <a href="https://github.com/theme-next/hexo-theme-next" target="_blank" rel="noopener">https://github.com/theme-next/hexo-theme-next</a> themes/next</p>
+</blockquote>
+<ul>
+<li><p>hexo 首页文章只显示一部分</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Automatically scroll page to section which is under &lt;!-- more --&gt; mark.</span><br><span class="line">scroll_to_more: true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hexo 添加站内搜索</p>
+<p>1、 安装相关插件  <code>npm install hexo-generator-searchdb --save</code></p>
+<p>若有fsevents相关警告可不必理会，此时已经安装好了</p>
+<p>2、 修改根目录下的_config.yml，添加以下内容</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  format: html</span><br><span class="line">  limit: 10000</span><br></pre></td></tr></table></figure>
+<p>3、 修改next主题目录下的_config.yml，将local_search的false改为true</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">local_search:</span><br><span class="line">  enable: true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hexo 写文章时用到图片如何处理</p>
+<p>1、 安装相关插件  <code>npm install hexo-asset-image --save</code></p>
+<p>2、 修改根目录下的_config.yml，将post_asset_folder:这个选项设置为true</p>
+</li>
+<li><p>hexo 修改文章底部的#号标签</p>
+<p>修改模板/themes/next/layout/_macro/post.swig，搜索 <code>rel=&quot;tag&quot;&gt;#</code>，将其中的 # 换成<code>&lt;i class=&quot;fa fa-tag&quot;&gt;&lt;/i&gt;</code></p>
+</li>
+<li><p>hexo 添加置顶</p>
+<p>1、 安装相关插件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm uninstall hexo-generator-index --save</span><br><span class="line">npm install hexo-generator-index-pin-top --save</span><br></pre></td></tr></table></figure>
+<p>2、 在需要置顶文章的front-matter中加上<code>top: true</code></p>
+<p>3、 修改模板/themes/next/layout/_macro/post.swig，在<code>&lt;div class=&quot;post-meta&quot;&gt;</code>标签下，添加如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;% if post.top %&#125;</span><br><span class="line">&lt;i class=&quot;fa fa-thumb-tack&quot;&gt;&lt;/i&gt;</span><br><span class="line">&lt;font color=7D26CD&gt;置顶&lt;/font&gt;</span><br><span class="line">&lt;span class=&quot;post-meta-divider&quot;&gt;|&lt;/span&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5、其他事项"><a href="#5、其他事项" class="headerlink" title="5、其他事项"></a>5、其他事项</h3><ul>
+<li><p>powershell无法运行hexo，报错如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">hexo : 无法加载文件 C:\Users\Administrator\AppData\Roaming\npm\hexo.ps1，因为在此系统上禁止运行脚本。</span><br></pre></td></tr></table></figure>
+<p>解决方法： </p>
+<p>1、 以管理员身份打开powershell</p>
+<p>2、 <code>set-ExecutionPolicy RemoteSigned</code> 更改权限为A 3</p>
+<p>3、 通过 get-ExecutionPolicy 查看当前的状态</p>
+</li>
+</ul>
+]]></content>
       <tags>
         <tag>hexo</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>popen函数无法获取错误输出</title>
+    <url>/2019/04/11/popen%E5%87%BD%E6%95%B0%E6%97%A0%E6%B3%95%E8%8E%B7%E5%8F%96%E9%94%99%E8%AF%AF%E8%BE%93%E5%87%BA/</url>
+    <content><![CDATA[<pre><code>有时候在编程时，我们需要调用外部命令，并获取该命令的输出。linux提供了popen()函数来帮我们解决这个难题。
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">FILE *popen(const char *command, const char *type);</span><br><span class="line">int pclose(FILE *stream);</span><br></pre></td></tr></table></figure>
+<pre><code>当设置type为&apos;r&apos;时，便可以获取到该命令的标准输出了，但是却不能获取到标准错误输出。
+要解决的话其实很简单，那就是在执行命令时重定向就好了2&gt;&amp;1。
+</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int main(int argc, char **argv)</span><br><span class="line">&#123;</span><br><span class="line">    FILE *fp = NULL;</span><br><span class="line">    char buff[256] = &#123;0&#125;;</span><br><span class="line"></span><br><span class="line">    fp = popen(&quot;ping -I epon0.2 -c 5 www.baidu.com 2&gt;&amp;1&quot;, &quot;r&quot;);</span><br><span class="line">    if (NULL == fp)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;popen error\n&quot;);</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    while (NULL != fgets(buff, sizeof(buff), fp))</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;buff: %s\n&quot;,buff);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    pclose(fp);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+  </entry>
+  <entry>
+    <title>tcpdump之我用</title>
+    <url>/2019/03/27/tcpdump%E4%B9%8B%E6%88%91%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="常用tcpdump命令"><a href="#常用tcpdump命令" class="headerlink" title="常用tcpdump命令"></a>常用tcpdump命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tcpdump -i any</td>
+<td>抓取所有网卡的数据</td>
+</tr>
+<tr>
+<td>tcpdump -i eth0 host 192.168.42.1 and port 1111</td>
+<td>抓取在eth0上特定IP地址和端口号的数据包</td>
+</tr>
+<tr>
+<td>tcpdump -c 5 -nn -i eth0 icmp and src 192.168.100.62</td>
+<td>抓取5个主机为192.168.100.62对本机的ping的数据包</td>
+</tr>
+<tr>
+<td>tcpdump -c 2 -q -XX -vvv -nn -i eth0 tcp dst port 22</td>
+<td>解析ssh数据包</td>
+</tr>
+<tr>
+<td>tcpdump -i eth0 udp port 1111</td>
+<td>抓取UDP协议并指定端口号</td>
+</tr>
+<tr>
+<td>tcpdump -i eth0 udp -w /tmp/br0.pcap &amp;</td>
+<td>抓取UDP协议数据并输出为Wireshark格式的文件（结束抓包killall tcpdump）</td>
+</tr>
+</tbody>
+</table>
+<a id="more"></a>
+<h3 id="tcpdump-–help"><a href="#tcpdump-–help" class="headerlink" title="tcpdump –help"></a>tcpdump –help</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># tcpdump -h</span><br><span class="line">tcpdump version 4.9.2</span><br><span class="line">libpcap version 1.8.1</span><br><span class="line">Usage: tcpdump [-aAbdDefhHIJKlLnNOpqStuUvxX#] [ -B size ] [ -c count ]</span><br><span class="line">		[ -C file_size ] [ -E algo:secret ] [ -F file ] [ -G seconds ]</span><br><span class="line">		[ -i interface ] [ -j tstamptype ] [ -M secret ] [ --number ]</span><br><span class="line">		[ -Q in|out|inout ]</span><br><span class="line">		[ -r file ] [ -s snaplen ] [ --time-stamp-precision precision ]</span><br><span class="line">		[ --immediate-mode ] [ -T type ] [ --version ] [ -V file ]</span><br><span class="line">		[ -w file ] [ -W filecount ] [ -y datalinktype ] [ -z postrotate-command ]</span><br><span class="line">		[ -Z user ] [ expression ]</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>wireshark之我用</title>
+    <url>/2019/03/27/wireshark%E4%B9%8B%E6%88%91%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h2><h3 id="1、捕获过滤器（CaptureFilters）"><a href="#1、捕获过滤器（CaptureFilters）" class="headerlink" title="1、捕获过滤器（CaptureFilters）"></a>1、捕获过滤器（CaptureFilters）</h3><p>捕获过滤器设置于抓包前，决定想要抓取什么样的报文，捕获过滤器只能过滤协议，不能过滤内容。<br>打开wireshark软件，依次点击<code>捕获</code>-&gt;<code>捕获过滤器</code>，可看到wireshark默认的过滤器规则有：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>过滤器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“Ethernet address 00:00:5e:00:53:00”</td>
+<td>ether host 00:00:5e:00:53:00</td>
+</tr>
+<tr>
+<td>“Ethernet type 0x0806 (ARP)”</td>
+<td>ether proto 0x0806</td>
+</tr>
+<tr>
+<td>“No Broadcast and no Multicast”</td>
+<td>not broadcast and not multicast</td>
+</tr>
+<tr>
+<td>“No ARP”</td>
+<td>not arp</td>
+</tr>
+<tr>
+<td>“IPv4 only”</td>
+<td>ip</td>
+</tr>
+<tr>
+<td>“IPv4 address 192.0.2.1”</td>
+<td>host 192.0.2.1</td>
+</tr>
+<tr>
+<td>“IPv6 only”</td>
+<td>ip6</td>
+</tr>
+<tr>
+<td>“IPv6 address 2001:db8::1”</td>
+<td>host 2001:db8::1</td>
+</tr>
+<tr>
+<td>“IPX only”</td>
+<td>ipx</td>
+</tr>
+<tr>
+<td>“TCP only”</td>
+<td>tcp</td>
+</tr>
+<tr>
+<td>“UDP only”</td>
+<td>udp</td>
+</tr>
+<tr>
+<td>“TCP or UDP port 80 (HTTP)”</td>
+<td>port 80</td>
+</tr>
+<tr>
+<td>“HTTP TCP port (80)”</td>
+<td>tcp port http</td>
+</tr>
+<tr>
+<td>“No ARP and no DNS”</td>
+<td>not arp and port not 53</td>
+</tr>
+<tr>
+<td>“Non-HTTP and non-SMTP to/from <a href="http://www.wireshark.org&quot;" target="_blank" rel="noopener">www.wireshark.org&quot;</a></td>
+<td>not port 80 and not port 25 and host <a href="http://www.wireshark.org" target="_blank" rel="noopener">www.wireshark.org</a></td>
+</tr>
+</tbody>
+</table>
+<p>我们可以借助示例来写出我们自己想要的过滤规则，比如</p>
+<blockquote>
+<p>(host 192.168.1.1 or src net 10.58.0.0/16) and tcp dst portrange 80-8080 and dst net 172.0.0.0/8</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="2、显示过滤器（DisplayFilters）"><a href="#2、显示过滤器（DisplayFilters）" class="headerlink" title="2、显示过滤器（DisplayFilters）"></a>2、显示过滤器（DisplayFilters）</h3><p>显示过滤器用于过滤所抓取的报文，方便处理和排查，它不但支持协议过滤而且还支持内容过滤。  </p>
+<h4 id="2-1-协议过滤"><a href="#2-1-协议过滤" class="headerlink" title="2.1 协议过滤"></a>2.1 协议过滤</h4><p>根据具体协议<br><code>ppp || pppoe || pppoed || pppoes</code> 过滤ppp相关报文<br>根据协议的属性值<br><code>tcp.flags.syn == 1</code><br><code>tcp.port == 49264</code><br><code>tcp.srcport == 49264</code><br><code>ip.addr != 192.168.1.1</code><br><code>ip.src == 192.168.1.1</code><br><code>http.request.method == &quot;GET&quot;</code><br><code>dns.qry.name == &quot;zyx.qq.com&quot;</code><br><strong>不知道属性值怎么过滤时，可以在wireshark中找到该属性值，右击选中<code>作为过滤器应用</code>-&gt;<code>选中</code></strong></p>
+<h4 id="2-2-内容过滤"><a href="#2-2-内容过滤" class="headerlink" title="2.2 内容过滤"></a>2.2 内容过滤</h4><p><code>tcp contains &quot;USER&quot;</code><br><code>udp[8:3] == 02:37:61</code> udp报文的payload前3个字节<br>在遇到大小写敏感的时候，还可以使用函数：<br>upper(string－field)－把字符串转换成大写<br>lower(string－field)－把字符串转换成小写<br>如 lower(http.request.uri) contains “img”</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>查找可以通过按<code>Ctrl+F</code>键，可选<code>显示过滤器</code>、<code>十六进制值</code>、<code>字符串</code>、<code>正则表达式</code></p>
+<p>另外在<code>统计</code>菜单栏里，IO图表，流量图等也均是分析协议的利器</p>
+]]></content>
+      <categories>
+        <category>工具使用</category>
+      </categories>
   </entry>
 </search>
